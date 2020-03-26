@@ -12,6 +12,9 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
+/**
+ * @internal
+ */
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
 

@@ -7,6 +7,9 @@ namespace Rikudou\FriendClasses;
 use Error;
 use ReflectionObject;
 
+/**
+ * @internal
+ */
 trait FriendsTrait
 {
     private $_friends_Config = [

@@ -5,6 +5,9 @@ namespace Rikudou\FriendClasses\Composer;
 use Composer\Autoload\ClassLoader;
 use function Composer\Autoload\includeFile;
 
+/**
+ * @internal
+ */
 class Autoloader extends ClassLoader
 {
     /**
