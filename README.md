@@ -22,6 +22,12 @@ public:
 }
 ```
 
+## Installation
+
+`composer require rikudou/friend-classes`
+
+That's it, the package is now automatically enabled and works out of the box.
+
 ## Usage
 
 After installing this package you can use similar concept in PHP:
