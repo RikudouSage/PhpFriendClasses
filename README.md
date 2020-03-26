@@ -153,6 +153,29 @@ cleared when composer generates new autoloader, e.g. during `install`, `update`,
 To enable the production mode, simply use the flag `--optimize` (or `--classmap-authoritative` or the shortcuts
 `-o` or `-a`) when generating the composer autoloader.
 
+## Preloading in production mode
+
+When you're in production mode the classes are injected during the autoloader dump. When preloading is enabled
+no class injecting is done in runtime which speeds up the process significantly.
+
+The downside is that the preloader cannot inject classes that were already loaded during the dump process which should
+not be a problem in most cases but can break your app in a few edge cases.
+
+If you want to turn off the preloading, you can do so by setting a config in composer.json like this:
+
+```json5
+{
+  "require": {
+    // your requires
+  },
+  "extra": {
+    "friendClasses": {
+      "preload": false
+    }
+  }
+}
+```
+
 Examples:
 
 - Production mode won't be enabled:

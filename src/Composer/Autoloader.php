@@ -16,11 +16,11 @@ class Autoloader extends ClassLoader
     private $vendorDir;
 
     /**
-     * @var bool
+     * @var AutoloaderConfig
      */
-    private $devMode;
+    private $config;
 
-    public function __construct(ClassLoader $originalLoader, string $vendorDir, bool $devMode)
+    public function __construct(ClassLoader $originalLoader, string $vendorDir, AutoloaderConfig $config)
     {
         $this->add(null, $originalLoader->getFallbackDirs());
         $this->addPsr4(null, $originalLoader->getFallbackDirsPsr4());
@@ -33,17 +33,20 @@ class Autoloader extends ClassLoader
         $this->setUseIncludePath($originalLoader->getUseIncludePath());
 
         $this->vendorDir = $vendorDir;
-        $this->devMode = $devMode;
+        $this->config = $config;
     }
 
-    public function loadClass($class)
+    public function loadClass($class, bool $preloadedOnly = null)
     {
-        if (!$this->devMode && file_exists($this->getHashedFileName($class))) {
+        if ($preloadedOnly === null) {
+            $preloadedOnly = $this->config->preload;
+        }
+        if (!$this->config->devMode && file_exists($this->getHashedFileName($class))) {
             includeFile($this->getHashedFileName($class));
             return true;
         }
 
-        if ($file = $this->findFile($class)) {
+        if (!$preloadedOnly && $file = $this->findFile($class)) {
             $content = file_get_contents($file);
             if (
                 strpos($content, '@FriendClass') !== false
