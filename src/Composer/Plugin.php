@@ -140,7 +140,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             $autoloader = require "${vendorDir}/autoload.php";
             $classMap = require $classMapFile;
             foreach ($classMap as $class => $file) {
-                if (class_exists($class, false)) {
+                if (
+                    class_exists($class, false)
+                    || interface_exists($class, false)
+                    || trait_exists($class, false)
+                ) {
                     continue;
                 }
                 $autoloader->loadClass($class, false);
