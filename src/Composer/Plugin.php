@@ -3,7 +3,10 @@
 namespace Rikudou\FriendClasses\Composer;
 
 use Composer\Composer;
+use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Installer\PackageEvent;
+use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
@@ -29,6 +32,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     private $io;
 
     /**
+     * @var bool
+     */
+    private $isUninstalling = false;
+
+    /**
      * @inheritDoc
      */
     public function activate(Composer $composer, IOInterface $io)
@@ -44,6 +52,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         return [
             ScriptEvents::POST_AUTOLOAD_DUMP => 'registerAutoloader',
+            PackageEvents::PRE_PACKAGE_UNINSTALL => 'handleUninstall',
         ];
     }
 
@@ -69,6 +78,14 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             }
         }
 
+        if ($this->isUninstalling) {
+            rmdir("${dir}/composer/friend-classes");
+            if (file_exists("${dir}/composer_autoload.php")) {
+                unlink("${dir}/composer_autoload.php");
+            }
+            return;
+        }
+
         $content = <<<AUTOLOADER
         <?php
         
@@ -90,5 +107,16 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
         rename("${dir}/autoload.php", "${dir}/composer_autoload.php");
         file_put_contents("${dir}/autoload.php", $content);
+    }
+
+    public function handleUninstall(PackageEvent $event)
+    {
+        $operation = $event->getOperation();
+        if ($operation instanceof UninstallOperation) {
+            $package = $operation->getPackage();
+            if ($package->getName() === 'rikudou/friend-classes') {
+                $this->isUninstalling = true;
+            }
+        }
     }
 }
