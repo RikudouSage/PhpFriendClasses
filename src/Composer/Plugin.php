@@ -62,7 +62,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $config = new AutoloaderConfig();
         $config->devMode = !($event->getFlags()['optimize'] ?? false);
         $config->preload = !$config->devMode
-            && ($this->composer->getPackage()->getExtra()['friendClasses']['preload'] ?? true);
+            && ($this->composer->getPackage()->getExtra()['friendClasses']['preload'] ?? false);
 
         $dir = $this->composer->getConfig()->get('vendor-dir');
         if (!file_exists("${dir}/composer/friend-classes")) {

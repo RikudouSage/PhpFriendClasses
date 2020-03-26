@@ -155,13 +155,16 @@ To enable the production mode, simply use the flag `--optimize` (or `--classmap-
 
 ## Preloading in production mode
 
-When you're in production mode the classes are injected during the autoloader dump. When preloading is enabled
+When you're in production mode the classes can be injected during the autoloader dump. When preloading is enabled
 no class injecting is done in runtime which speeds up the process significantly.
 
 The downside is that the preloader cannot inject classes that were already loaded during the dump process which should
 not be a problem in most cases but can break your app in a few edge cases.
 
-If you want to turn off the preloading, you can do so by setting a config in composer.json like this:
+The other downside is that when the class cannot be loaded (e.g. due to extending non-existing class), it fails,
+for example Symfony does this a lot.
+
+If you want to enable the preloading, you can do so by setting a config in composer.json like this:
 
 ```json5
 {
@@ -170,7 +173,7 @@ If you want to turn off the preloading, you can do so by setting a config in com
   },
   "extra": {
     "friendClasses": {
-      "preload": false
+      "preload": true
     }
   }
 }
