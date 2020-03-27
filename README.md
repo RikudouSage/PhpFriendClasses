@@ -159,11 +159,11 @@ The classes with the annotation must use some standard indentation for it to wor
 class MyClass{private $property = 1;}
 ```
 
-If you ask why, it's because I'm too lazy to handle such cases.
+It's because I'm too lazy to handle such cases.
 
 ## Is it slow? Should I use it in production?
 
-Kind of. Should be fast enough when running in production mode but of course it's slower than without using it.
+Kind of. Should be fast enough when running in production mode but of course it's slower than when not using it.
 
 As for whether you should use it, it depends entirely on you. Friend classes are a powerful feature that's easy
 to misuse. Also this implementation is far from perfect and is more for a demonstration purposes.
