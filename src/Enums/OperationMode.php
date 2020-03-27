@@ -2,7 +2,7 @@
 
 namespace Rikudou\FriendClasses\Enums;
 
-class OperationMode
+final class OperationMode
 {
     public const METHODS = 'methods';
     public const PROPERTIES = 'properties';

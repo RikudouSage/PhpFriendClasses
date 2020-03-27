@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Rikudou\FriendClasses\Traits;
-
 
 use ReflectionObject;
 
@@ -14,7 +12,7 @@ trait FriendsTraitCommonDefinitions
     private $_friends_Config = [
         'parsed' => false,
         'classes' => [],
-        'currentClass' => ''
+        'currentClass' => '',
     ];
 
     private function _friends_Parse()
@@ -32,7 +30,7 @@ trait FriendsTraitCommonDefinitions
                 $line = trim($line, " \t\n\r\0\x0B*");
                 $class = str_replace([
                     '@FriendClass(',
-                    ')'
+                    ')',
                 ], '', $line);
                 if (strpos($class, '\\') === 0) {
                     $class = substr($class, 1);

@@ -22,9 +22,8 @@ use SplFileInfo;
 /**
  * @internal
  */
-class Plugin implements PluginInterface, EventSubscriberInterface
+final class Plugin implements PluginInterface, EventSubscriberInterface
 {
-
     /**
      * @var Composer
      */
@@ -106,6 +105,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             if (file_exists("${dir}/composer_autoload.php")) {
                 unlink("${dir}/composer_autoload.php");
             }
+
             return;
         }
 
@@ -115,7 +115,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         
         \$autoloader = require '${dir}/composer_autoload.php';
         
-        \$config = $exportedConfig;
+        \$config = ${exportedConfig};
         
         \$newAutoloader = new \Rikudou\FriendClasses\Composer\Autoloader(\$autoloader, '${dir}', \$config);
         \$autoloader->unregister();

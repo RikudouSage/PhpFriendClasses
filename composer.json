@@ -17,6 +17,12 @@
         "class": "\\Rikudou\\FriendClasses\\Composer\\Plugin"
     },
     "require-dev": {
-        "composer/composer": "^1.10"
+        "composer/composer": "^1.10",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "phpstan/phpstan": "^0.12.18"
+    },
+    "scripts": {
+        "fixer": "php-cs-fixer fix src --verbose",
+        "phpstan": "phpstan analyse --level=max src"
     }
 }

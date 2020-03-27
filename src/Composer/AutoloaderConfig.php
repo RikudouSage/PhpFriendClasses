@@ -5,7 +5,7 @@ namespace Rikudou\FriendClasses\Composer;
 /**
  * @internal
  */
-class AutoloaderConfig
+final class AutoloaderConfig
 {
     /**
      * @var bool
@@ -26,7 +26,7 @@ class AutoloaderConfig
     {
         $instance = new self();
         foreach ($state as $key => $value) {
-            $instance->$key = $value;
+            $instance->{$key} = $value;
         }
 
         return $instance;

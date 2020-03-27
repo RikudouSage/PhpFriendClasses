@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Rikudou\FriendClasses\Traits;
-
 
 use Error;
 
@@ -20,6 +18,7 @@ trait FriendsTraitPropertiesDefinition
                 sprintf('Undefined property: %s::$%s', $this->_friends_Config['currentClass'], $name),
                 E_USER_NOTICE
             );
+
             return null;
         }
 
@@ -34,6 +33,6 @@ trait FriendsTraitPropertiesDefinition
             );
         }
 
-        return $this->$name;
+        return $this->{$name};
     }
 }

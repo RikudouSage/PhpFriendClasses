@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Rikudou\FriendClasses\Traits;
-
 
 use Error;
 
@@ -15,7 +13,7 @@ trait FriendsTraitMethodsDefinition
     {
         $this->_friends_Parse();
 
-        if(!method_exists($this, $name)) {
+        if (!method_exists($this, $name)) {
             throw new Error(
                 sprintf('Call to undefined method %s::%s()', $this->_friends_Config['currentClass'], $name)
             );

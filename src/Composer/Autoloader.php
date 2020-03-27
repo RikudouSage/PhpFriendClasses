@@ -8,7 +8,7 @@ use function Composer\Autoload\includeFile;
 /**
  * @internal
  */
-class Autoloader extends ClassLoader
+final class Autoloader extends ClassLoader
 {
     /**
      * @var string
@@ -43,6 +43,7 @@ class Autoloader extends ClassLoader
         }
         if (!$this->config->devMode && file_exists($this->getHashedFileName($class))) {
             includeFile($this->getHashedFileName($class));
+
             return true;
         }
 
@@ -64,6 +65,7 @@ class Autoloader extends ClassLoader
     private function getHashedFileName(string $class): string
     {
         $hash = md5($class);
+
         return "{$this->vendorDir}/composer/friend-classes/${hash}.php";
     }
 
