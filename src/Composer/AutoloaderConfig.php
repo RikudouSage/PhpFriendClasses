@@ -17,6 +17,11 @@ class AutoloaderConfig
      */
     public $preload;
 
+    /**
+     * @var string[]
+     */
+    public $traits = [];
+
     public static function __set_state($state)
     {
         $instance = new self();

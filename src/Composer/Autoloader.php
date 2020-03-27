@@ -99,8 +99,13 @@ class Autoloader extends ClassLoader
             return false;
         }
 
+        $traitsLine = "\n\n";
+        foreach ($this->config->traits as $trait) {
+            $traitsLine .= "use \\${trait};\n";
+        }
+
         $lines = explode(PHP_EOL, $content);
-        $lines[$line] = "\n\nuse \Rikudou\FriendClasses\FriendsTrait;\n" . $lines[$line];
+        $lines[$line] = $traitsLine . $lines[$line];
 
         file_put_contents($this->getHashedFileName($class), implode(PHP_EOL, $lines));
 

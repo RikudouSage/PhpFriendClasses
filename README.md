@@ -110,6 +110,38 @@ class MyClass
 }
 ```
 
+## Configuration
+
+All configuration is done inside the composer.json file in `extra`.`friendClasses` and is optional.
+
+### Mode
+
+You can set whether you want access to properties, methods or both. Default is both.
+
+```json5
+{
+  "extra": {
+    "friendClasses": {
+      "mode": "methods" // or "both" or "properties"
+    }
+  }
+}
+```
+
+### Preload
+
+Whether to enable class preloading in production mode, see description below. Default is false.
+
+```json5
+{
+  "extra": {
+    "friendClasses": {
+      "preload": true
+    }
+  }
+}
+```
+
 ## Requirements
 
 The class cannot have magic `__get()` and `__call()` methods.

@@ -13,6 +13,10 @@ use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Rikudou\FriendClasses\Enums\OperationMode;
+use Rikudou\FriendClasses\Traits\FriendsTraitCommonDefinitions;
+use Rikudou\FriendClasses\Traits\FriendsTraitMethodsDefinition;
+use Rikudou\FriendClasses\Traits\FriendsTraitPropertiesDefinition;
 use SplFileInfo;
 
 /**
@@ -58,11 +62,26 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function registerAutoloader(Event $event)
     {
+        $extra = $this->composer->getPackage()->getExtra();
 
         $config = new AutoloaderConfig();
         $config->devMode = !($event->getFlags()['optimize'] ?? false);
         $config->preload = !$config->devMode
-            && ($this->composer->getPackage()->getExtra()['friendClasses']['preload'] ?? false);
+            && ($extra['friendClasses']['preload'] ?? false);
+        $config->traits[] = FriendsTraitCommonDefinitions::class;
+
+        switch ($extra['friendClasses']['mode'] ?? OperationMode::BOTH) {
+            case OperationMode::BOTH:
+                $config->traits[] = FriendsTraitMethodsDefinition::class;
+                $config->traits[] = FriendsTraitPropertiesDefinition::class;
+                break;
+            case OperationMode::METHODS:
+                $config->traits[] = FriendsTraitMethodsDefinition::class;
+                break;
+            case OperationMode::PROPERTIES:
+                $config->traits[] = FriendsTraitPropertiesDefinition::class;
+                break;
+        }
 
         $dir = $this->composer->getConfig()->get('vendor-dir');
         if (!file_exists("${dir}/composer/friend-classes")) {
