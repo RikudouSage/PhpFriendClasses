@@ -41,6 +41,11 @@ After installing this package you can use similar concept in PHP:
 class ClassWithPrivateProperty
 {
     private $myPrivateProperty = 0;
+    
+    private function myPrivateMethod()
+    {
+        return true;
+    }
 }
 
 class MyOtherClass
@@ -49,11 +54,14 @@ class MyOtherClass
     {
         $privateObject = new ClassWithPrivateProperty();
         $result = $privateObject->myPrivateProperty;
+        $result = $privateObject->myPrivateMethod();
     }
 }
 ```
 
 Notice the `@FriendClass` annotation in docblock of `ClassWithPrivateProperty`.
+
+You can use it for properties as well as methods.
 
 You can use the annotation multiple times to define multiple friend classes:
 
@@ -104,7 +112,7 @@ class MyClass
 
 ## Requirements
 
-The class cannot have magic `__get()` method.
+The class cannot have magic `__get()` and `__call()` methods.
 
 All classes must be loaded using the composer autoloader.
 
