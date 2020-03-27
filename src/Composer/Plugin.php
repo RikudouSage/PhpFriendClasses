@@ -42,14 +42,14 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * @inheritDoc
      */
-    public function activate(Composer $composer, IOInterface $io)
+    public function activate(Composer $composer, IOInterface $io): void
     {
         $this->composer = $composer;
         $this->io = $io;
     }
 
     /**
-     * @inheritDoc
+     * @return array<string, string>
      */
     public static function getSubscribedEvents()
     {
@@ -59,7 +59,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
         ];
     }
 
-    public function registerAutoloader(Event $event)
+    public function registerAutoloader(Event $event): void
     {
         $extra = $this->composer->getPackage()->getExtra();
 
@@ -94,8 +94,8 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
 
             /** @var SplFileInfo $file */
             foreach ($iterator as $file) {
-                if ($file->isFile()) {
-                    unlink($file->getRealPath());
+                if ($file->isFile() && $path = $file->getRealPath()) {
+                    unlink($path);
                 }
             }
         }
@@ -140,7 +140,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
         }
     }
 
-    public function handleUninstall(PackageEvent $event)
+    public function handleUninstall(PackageEvent $event): void
     {
         $operation = $event->getOperation();
         if ($operation instanceof UninstallOperation) {
@@ -151,7 +151,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
         }
     }
 
-    private function preload(string $vendorDir)
+    private function preload(string $vendorDir): void
     {
         $classMapFile = "${vendorDir}/composer/autoload_classmap.php";
         if (file_exists($classMapFile)) {

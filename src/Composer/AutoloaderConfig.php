@@ -22,7 +22,11 @@ final class AutoloaderConfig
      */
     public $traits = [];
 
-    public static function __set_state($state)
+    /**
+     * @param array<mixed> $state
+     * @return AutoloaderConfig
+     */
+    public static function __set_state(array $state)
     {
         $instance = new self();
         foreach ($state as $key => $value) {

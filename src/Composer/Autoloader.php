@@ -22,8 +22,8 @@ final class Autoloader extends ClassLoader
 
     public function __construct(ClassLoader $originalLoader, string $vendorDir, AutoloaderConfig $config)
     {
-        $this->add(null, $originalLoader->getFallbackDirs());
-        $this->addPsr4(null, $originalLoader->getFallbackDirsPsr4());
+        $this->add('', $originalLoader->getFallbackDirs());
+        $this->addPsr4('', $originalLoader->getFallbackDirsPsr4());
         foreach ($originalLoader->getPrefixes() as $prefix => $path) {
             $this->add($prefix, $path);
         }
@@ -49,6 +49,7 @@ final class Autoloader extends ClassLoader
 
         if (!$preloadedOnly && $file = $this->findFile($class)) {
             $content = file_get_contents($file);
+            assert(is_string($content));
             if (
                 strpos($content, '@FriendClass') !== false
                 && $this->createClass($class, $content)
