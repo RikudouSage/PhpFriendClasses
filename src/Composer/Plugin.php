@@ -113,11 +113,11 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
         $content = <<<AUTOLOADER
         <?php
         
-        \$autoloader = require '${dir}/composer_autoload.php';
+        \$autoloader = require __DIR__ . '/composer_autoload.php';
         
         \$config = ${exportedConfig};
         
-        \$newAutoloader = new \Rikudou\FriendClasses\Composer\Autoloader(\$autoloader, '${dir}', \$config);
+        \$newAutoloader = new \Rikudou\FriendClasses\Composer\Autoloader(\$autoloader, __DIR__, \$config);
         \$autoloader->unregister();
         \$newAutoloader->register(true);
         
