@@ -9,7 +9,10 @@ use Error;
  */
 trait FriendsTraitMethodsDefinition
 {
-    public function __call($name, $arguments)
+    /**
+     * @param array<int,mixed> $arguments
+     */
+    public function __call(string $name, array $arguments): mixed
     {
         $this->_friends_Parse();
 

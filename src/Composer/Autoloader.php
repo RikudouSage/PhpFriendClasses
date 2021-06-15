@@ -13,15 +13,16 @@ final class Autoloader extends ClassLoader
     /**
      * @var string
      */
-    private $vendorDir;
+    private string $vendorDir;
 
     /**
      * @var AutoloaderConfig
      */
-    private $config;
+    private AutoloaderConfig $config;
 
     public function __construct(ClassLoader $originalLoader, string $vendorDir, AutoloaderConfig $config)
     {
+        parent::__construct($vendorDir);
         $this->add('', $originalLoader->getFallbackDirs());
         $this->addPsr4('', $originalLoader->getFallbackDirsPsr4());
         foreach ($originalLoader->getPrefixes() as $prefix => $path) {
@@ -36,7 +37,7 @@ final class Autoloader extends ClassLoader
         $this->config = $config;
     }
 
-    public function loadClass($class, bool $preloadedOnly = null)
+    public function loadClass($class, bool $preloadedOnly = null): ?bool
     {
         if ($preloadedOnly === null) {
             $preloadedOnly = $this->config->preload;
@@ -51,7 +52,7 @@ final class Autoloader extends ClassLoader
             $content = file_get_contents($file);
             assert(is_string($content));
             if (
-                strpos($content, '@FriendClass') !== false
+                str_contains($content, '@FriendClass')
                 && $this->createClass($class, $content)
             ) {
                 includeFile($this->getHashedFileName($class));

@@ -9,13 +9,16 @@ use ReflectionObject;
  */
 trait FriendsTraitCommonDefinitions
 {
-    private $_friends_Config = [
+    /**
+     * @var array<string,mixed>
+     */
+    private array $_friends_Config = [
         'parsed' => false,
         'classes' => [],
         'currentClass' => '',
     ];
 
-    private function _friends_Parse()
+    private function _friends_Parse(): void
     {
         if ($this->_friends_Config['parsed']) {
             return;
@@ -32,7 +35,7 @@ trait FriendsTraitCommonDefinitions
                     '@FriendClass(',
                     ')',
                 ], '', $line);
-                if (strpos($class, '\\') === 0) {
+                if (str_starts_with($class, '\\')) {
                     $class = substr($class, 1);
                 }
 

@@ -11,6 +11,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use JetBrains\PhpStorm\ArrayShape;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Rikudou\FriendClasses\Enums\OperationMode;
@@ -27,17 +28,17 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * @var Composer
      */
-    private $composer;
+    private Composer $composer;
 
     /**
      * @var IOInterface
      */
-    private $io;
+    private IOInterface $io;
 
     /**
      * @var bool
      */
-    private $isUninstalling = false;
+    private bool $isUninstalling = false;
 
     /**
      * @inheritDoc
@@ -48,10 +49,29 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
         $this->io = $io;
     }
 
+    public function deactivate(Composer $composer, IOInterface $io): void
+    {
+        $this->composer = $composer;
+        $this->io = $io;
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io): void
+    {
+        $this->composer = $composer;
+        $this->io = $io;
+
+        $dir = $this->composer->getConfig()->get('vendor-dir');
+        rmdir("${dir}/composer/friend-classes");
+        if (file_exists("${dir}/composer_autoload.php")) {
+            unlink("${dir}/composer_autoload.php");
+        }
+    }
+
     /**
      * @return array<string, string>
      */
-    public static function getSubscribedEvents()
+    #[ArrayShape([ScriptEvents::POST_AUTOLOAD_DUMP => 'string', PackageEvents::PRE_PACKAGE_UNINSTALL => 'string'])]
+    public static function getSubscribedEvents(): array
     {
         return [
             ScriptEvents::POST_AUTOLOAD_DUMP => 'registerAutoloader',

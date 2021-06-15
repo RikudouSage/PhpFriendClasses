@@ -9,7 +9,7 @@ use Error;
  */
 trait FriendsTraitPropertiesDefinition
 {
-    public function __get($name)
+    public function __get(string $name): mixed
     {
         $this->_friends_Parse();
 

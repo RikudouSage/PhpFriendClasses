@@ -2,6 +2,8 @@
 
 namespace Rikudou\FriendClasses\Composer;
 
+use JetBrains\PhpStorm\Pure;
+
 /**
  * @internal
  */
@@ -10,23 +12,23 @@ final class AutoloaderConfig
     /**
      * @var bool
      */
-    public $devMode;
+    public bool $devMode = false;
 
     /**
      * @var bool
      */
-    public $preload;
+    public bool $preload = false;
 
     /**
      * @var string[]
      */
-    public $traits = [];
+    public array $traits = [];
 
     /**
-     * @param array<mixed> $state
-     * @return AutoloaderConfig
+     * @param array<string,mixed> $state
      */
-    public static function __set_state(array $state)
+    #[Pure]
+    public static function __set_state(array $state): self
     {
         $instance = new self();
         foreach ($state as $key => $value) {
