@@ -77,6 +77,93 @@ class MyClass
 }
 ```
 
+## Allow only certain methods/properties
+
+If you want to allow access only to certain properties/methods, you can define the `FriendClass` attribute
+on the property/method directly. In that case the class needs to have the `#[HasFriendClasses]` attribute or at
+least one `#[FriendClass]` attribute.
+
+```php
+<?php
+
+use Rikudou\FriendClasses\Attribute\HasFriendClasses;
+use Rikudou\FriendClasses\Attribute\FriendClass;
+
+#[HasFriendClasses]
+class MyPrivateClass {
+    #[FriendClass(ClassWithAccessToPrivateProperties::class)]
+    private int $someProperty = 1;
+    private int $someOtherProperty = 2;
+    
+    #[FriendClass(ClassWithAccessToPrivateProperties::class)]
+    private function someMethod(): void
+    {
+        // nothing to do
+    }
+    
+    private function someOtherMethod(): void
+    {
+        // nothing to do
+    }
+}
+
+class ClassWithAccessToPrivateProperties
+{
+    public function __construct()
+    {
+        $privateClass = new MyPrivateClass();
+        var_dump($privateClass->someProperty); // will dump 1
+        var_dump($privateClass->someOtherProperty); // will throw an error because this class is not a friend
+        $privateClass->someMethod(); // won't fail
+        $privateClass->someOtherMethod(); // will throw an error because this class is not a friend
+    }
+}
+```
+
+As mentioned before, the class doesn't need to have the `#[HasFriendClasses]` if it already contains `#[FriendClass]`
+attribute. The `#[HasFriendClasses]` is only a hint for the parser to inspect the class which happens also if there's
+a `#[FriendClass]` attribute.
+
+In the following example there's no `#[HasFriendClass]` attribute and `Class1` has access to all private
+properties/methods of `PrivateClass` while `Class2` only has access to some.
+
+```php
+<?php
+
+use Rikudou\FriendClasses\Attribute\FriendClass;
+
+#[FriendClass(Class1::class)]
+class PrivateClass
+{
+    #[FriendClass(Class2::class)]
+    private int $accessibleToBothClasses = 1;
+    private int $accessibleOnlyToClass1 = 2;
+}
+
+class Class1
+{
+    public function __construct()
+    {
+        $instance = new PrivateClass();
+        $instance->accessibleToBothClasses;
+        $instance->accessibleOnlyToClass1;
+        var_dump('This will get dumped because Class1 is a friend of the whole class and thus has access to everything');
+    }
+}
+
+class Class2
+{
+    public function __construct()
+    {
+        $instance = new PrivateClass();
+        $instance->accessibleToBothClasses;
+        $instance->accessibleOnlyToClass1;
+        var_dump('This will not get dumped because Class2 is only a friend to the $accessibleToBothClasses field');
+    }
+}
+
+```
+
 ## Configuration
 
 All configuration is done inside the composer.json file in `extra`.`friendClasses` and is optional.
