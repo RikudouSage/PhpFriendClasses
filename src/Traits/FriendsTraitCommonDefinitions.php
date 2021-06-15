@@ -3,6 +3,7 @@
 namespace Rikudou\FriendClasses\Traits;
 
 use ReflectionObject;
+use Rikudou\FriendClasses\Attribute\FriendClass;
 
 /**
  * @internal
@@ -27,25 +28,11 @@ trait FriendsTraitCommonDefinitions
         $this->_friends_Config['currentClass'] = get_class($this);
 
         $reflection = new ReflectionObject($this);
-        $docblock = $reflection->getDocComment();
-        if (is_string($docblock)) {
-            $this->_friends_Config['classes'] = array_map(function ($line) {
-                $line = trim($line, " \t\n\r\0\x0B*");
-                $class = str_replace([
-                    '@FriendClass(',
-                    ')',
-                ], '', $line);
-                if (str_starts_with($class, '\\')) {
-                    $class = substr($class, 1);
-                }
-
-                return $class;
-            }, array_filter(
-                explode(PHP_EOL, $docblock),
-                function ($line) {
-                    return strpos($line, '@FriendClass') !== false;
-                }
-            ));
+        $attributes = $reflection->getAttributes(FriendClass::class);
+        foreach ($attributes as $attribute) {
+            $attribute = $attribute->newInstance();
+            assert($attribute instanceof FriendClass);
+            $this->_friends_Config['classes'][] = $attribute->getClassName();
         }
 
         $this->_friends_Config['parsed'] = true;

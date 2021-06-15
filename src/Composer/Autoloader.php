@@ -22,7 +22,7 @@ final class Autoloader extends ClassLoader
 
     public function __construct(ClassLoader $originalLoader, string $vendorDir, AutoloaderConfig $config)
     {
-        parent::__construct($vendorDir);
+//        parent::__construct($vendorDir);
         $this->add('', $originalLoader->getFallbackDirs());
         $this->addPsr4('', $originalLoader->getFallbackDirsPsr4());
         foreach ($originalLoader->getPrefixes() as $prefix => $path) {
@@ -52,7 +52,7 @@ final class Autoloader extends ClassLoader
             $content = file_get_contents($file);
             assert(is_string($content));
             if (
-                str_contains($content, '@FriendClass')
+                str_contains($content, 'FriendClass(')
                 && $this->createClass($class, $content)
             ) {
                 includeFile($this->getHashedFileName($class));
@@ -77,9 +77,19 @@ final class Autoloader extends ClassLoader
 
         $line = null;
         $foundClass = false;
+        $foundAttribute = false;
+
         foreach ($tokens as $index => $token) {
             if (!$foundClass && !is_array($token)) {
                 continue;
+            }
+
+            if (!$foundAttribute && $token[0] !== T_ATTRIBUTE) {
+                continue;
+            }
+
+            if (!$foundAttribute && str_contains($tokens[$index + 1][1], 'FriendClass')) {
+                $foundAttribute = true;
             }
 
             if (!$foundClass && $token[0] !== T_CLASS) {
