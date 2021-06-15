@@ -22,7 +22,6 @@ final class Autoloader extends ClassLoader
 
     public function __construct(ClassLoader $originalLoader, string $vendorDir, AutoloaderConfig $config)
     {
-//        parent::__construct($vendorDir);
         $this->add('', $originalLoader->getFallbackDirs());
         $this->addPsr4('', $originalLoader->getFallbackDirsPsr4());
         foreach ($originalLoader->getPrefixes() as $prefix => $path) {
