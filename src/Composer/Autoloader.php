@@ -87,7 +87,13 @@ final class Autoloader extends ClassLoader
                 continue;
             }
 
-            if (!$foundAttribute && str_contains($tokens[$index + 1][1], 'FriendClass')) {
+            if (
+                !$foundAttribute
+                && (
+                    str_contains($tokens[$index + 1][1], 'FriendClass')
+                    || str_contains($tokens[$index + 1][1], 'HasFriendClasses')
+                )
+            ) {
                 $foundAttribute = true;
             }
 

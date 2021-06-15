@@ -26,7 +26,10 @@ trait FriendsTraitPropertiesDefinition
         if (
             !isset($trace[1])
             || !isset($trace[1]['class'])
-            || !in_array($trace[1]['class'], $this->_friends_Config['classes'], true)
+            || (
+                !in_array($trace[1]['class'], $this->_friends_Config['classes'], true)
+                && !in_array($trace[1]['class'], $this->_friends_Config['properties'][$name] ?? [], true)
+            )
         ) {
             throw new Error(
                 sprintf('Cannot access private property %s::$%s', $this->_friends_Config['currentClass'], $name)

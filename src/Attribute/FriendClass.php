@@ -4,7 +4,7 @@ namespace Rikudou\FriendClasses\Attribute;
 
 use Attribute;
 
-#[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_CLASS | Attribute::TARGET_METHOD | Attribute::TARGET_PROPERTY)]
 final class FriendClass
 {
     public function __construct(

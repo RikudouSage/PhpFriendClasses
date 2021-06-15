@@ -26,7 +26,10 @@ trait FriendsTraitMethodsDefinition
         if (
             !isset($trace[1])
             || !isset($trace[1]['class'])
-            || !in_array($trace[1]['class'], $this->_friends_Config['classes'], true)
+            || (
+                !in_array($trace[1]['class'], $this->_friends_Config['classes'], true)
+                && !in_array($trace[1]['class'], $this->_friends_Config['methods'][$name] ?? [], true)
+            )
         ) {
             throw new Error(
                 sprintf(
