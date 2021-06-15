@@ -35,14 +35,14 @@ After installing this package you can use similar concept in PHP:
 ```php
 <?php
 
-/**
- * @FriendClass(MyOtherClass)
- */
+use Rikudou\FriendClasses\Attribute\FriendClass;
+
+#[FriendClass(MyOtherClass::class)]
 class ClassWithPrivateProperty
 {
-    private $myPrivateProperty = 0;
+    private int $myPrivateProperty = 0;
     
-    private function myPrivateMethod()
+    private function myPrivateMethod(): bool
     {
         return true;
     }
@@ -50,7 +50,7 @@ class ClassWithPrivateProperty
 
 class MyOtherClass
 {
-    public function someMethod()
+    public function someMethod(): void
     {
         $privateObject = new ClassWithPrivateProperty();
         $result = $privateObject->myPrivateProperty;
@@ -59,52 +59,19 @@ class MyOtherClass
 }
 ```
 
-Notice the `@FriendClass` annotation in docblock of `ClassWithPrivateProperty`.
+Notice the `#[FriendClass]` attribute above class `ClassWithPrivateProperty`.
 
 You can use it for properties as well as methods.
 
-You can use the annotation multiple times to define multiple friend classes:
+You can use the attribute multiple times to define multiple friend classes:
 
 ```php
 <?php
 
-/**
- * @FriendClass(FriendClass1)
- * @FriendClass(FriendClass2)
- */
-class MyClass
-{
-}
-```
+use Rikudou\FriendClasses\Attribute\FriendClass;
 
-You must use the fully qualified class name, imports using the `use` keyword are not taken into account.
-You can use the name with or without leading backslash.
-
-This will work:
-
-```php
-<?php
-
-/**
- * @FriendClass(My\Namespaced\Class1)
- * @FriendClass(\My\Namespaced\Class2)
- */
-class MyClass
-{
-}
-```
-
-This will not:
-
-```php
-<?php
-
-use My\Namespaced\Class1;
-
-/**
- * The imports are ignored inside the annotation, this won't work
- * @FriendClass(Class1)
- */
+#[FriendClass('FriendClass1')]
+#[FriendClass('FriendClass2')]
 class MyClass
 {
 }
@@ -153,9 +120,9 @@ The classes with the annotation must use some standard indentation for it to wor
 ```php
 <?php
 
-/**
- * @FriendClass(SomeFriendClass)
- */
+use Rikudou\FriendClasses\Attribute\FriendClass;
+
+ #[FriendClass('SomeFriendClass')]
 class MyClass{private $property = 1;}
 ```
 
@@ -174,8 +141,8 @@ But if you want to use it, you can.
 
 This library hooks into composer and replaces the autoloader.
 
-Whenever you load a class using the autoloader, it gets checked whether it contains a `@FriendClass` annotation and if
-it does, the class is injected with `\Rikudou\FriendClasses\FriendsTrait` trait which does all the work.
+Whenever you load a class using the autoloader, it gets checked whether it contains a `#[FriendClass]` attribute and if
+it does, the class is injected with some traits that do all the work.
 
 The trait defines a magic `__get()` method and using `debug_backtrace()` checks who the caller is. If the caller is
 one of the friend classes, it returns the value of the property, otherwise throws an `Error`. If the property does not
